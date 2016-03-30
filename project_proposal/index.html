@@ -1,0 +1,182 @@
+<!DOCTYPE HTML>
+<!--
+	Highlights by HTML5 UP
+	html5up.net | @n33co
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Highlights by HTML5 UP</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+	</head>
+	<body>
+
+		<!-- Header -->
+			<section id="header">
+					<header class="major">
+					<h1>H H HASH</h1>
+					<p>Yiming Zong (yzong) Norman Ponte (nponte)</p>
+					</header>
+			</section>
+
+		<!-- One -->
+
+			<section id="one" class="main special">
+				<div class="container">
+					<span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
+					<div class="content">
+						<header class="major">
+							<h2>Summary</h2>
+						</header>
+                                                <p>We are going to implement a distributed hash table that uses a two phase 
+                                                   commit protocol in order to ensure atomicity. Parallelism will be used 
+                                                   in order to process requests from multiple clients. Parallelism will 
+                                                   also be present in order to manage the nodes and handle orchestration.</p>
+					</div>
+					<a href="#two" class="goto-next scrolly">Next</a>
+				</div>
+			</section>
+                                
+               <!-- Second One -->
+			<section id="two" class="main special">
+				<div class="container">
+					<span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
+					<div class="content">
+						<header class="major">
+							<h2>Background</h2>
+						</header>
+                                                <p>In parallel code very often we run the program with a very large data set to run the code against. One of the most basic structures for these large data sets is a hash table. With this in mind we want to develop a distributed hash-table which using parallelism will allow users of our hashtable to achieve speedups while searching large data sets. 
+	                                        </br>
+                                                </br>
+                                                   Parallelism in this case is a means to achieve an end. The idea we are trying to achieve is a distributed hash table that has all the feautures you would expect from any distributed set such as replication and atomic operations. In order to achieve this we need to parallism to ensure fast access times.</p>
+					</div>
+					<a href="#three" class="goto-next scrolly">Next</a>
+				</div>
+			</section>
+
+               <!-- Third One -->
+			<section id="three" class="main special">
+				<div class="container">
+					<span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
+					<div class="content">
+						<header class="major">
+							<h2>Challenge</h2>
+						</header>
+                                                <p>Speed is the name of the game. Very intergral to our design is the speed of operations and the idea that what we will be hashing will occupy a very large area. The main challenge for us is to make sure our design works for different workloads and access patterns and optimizations that can be done for different problem sets. 
+						</br>
+						</br>
+                                                   Load balancing for a distributed hash table will be an important part of our design we want the data to be balanced between our nodes but at the same time minimizing the communication between nodes in order to minimize overhead. When multiple clients are hashing some objects we don’t know what the mapping of the hash values they are going to insert into the system will be. This means we will have to do balancing as we go which again can prove to be a bottleneck for speed.
+						</br>
+						</br>
+						   Fault tolerance will also be a problem. We have to write our parallel code with the idea that the number of nodes in the system and the status of the nodes can be changing at all times and that features we advertise will work. 
+						</br>
+						</br>
+						   We also hope to use Legion in order to manage our regions in our different nodes and understand that it will be a challenge to fully understand their system and how to correctly and efficiently use it for our problem.</p>
+				</div>
+					<a href="#four" class="goto-next scrolly">Next</a>
+				</div>
+			</section>
+
+               <!-- Fourth One -->
+			<section id="four" class="main special">
+				<div class="container">
+					<span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
+					<div class="content">
+						<header class="major">
+							<h2>Resources</h2>
+						</header>
+                                                <p>Our current ideas are to use Legion in order to manage our memory regions on different servers. The idea behind this is so that we have some code to start off of and we believe that Legion will allow us to achieve the desired times for our interface. When testing with different nodes we are currently thinking of using AWS so that we can elastically expand and shrink as different amounts of space of required as per the problem space. 
+                                                </br>
+						</br>
+	Our idea is roughly based around two connected berkley assignments below. These projects comes with starter code and direction which we will have to determine what can help us and what is outside of our deliverables.
+                                                </br>
+                      				</br>
+					        <a href ="http://www-inst.eecs.berkeley.edu/~cs162/fa12/phase3.html"> Berkley Assignment 1 </a>
+                                                </br>
+						</br>
+						<a href ="http://www-inst.eecs.berkeley.edu/~cs162/fa12/phase4.html"> Berkley Assignment 2 </a></p>
+                                 	</div>
+					<a href="#five" class="goto-next scrolly">Next</a>
+				</div>
+			</section>
+
+	<!-- Fifth One -->
+			<section id="five" class="main special">
+				<div class="container">
+					<span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
+					<div class="content">
+						<header class="major">
+							<h2>Goals and Deliverables</h2>
+						</header>
+								<h5>Plan to Achieve</h5>
+								<p>Our main deliverable is a fast distributed two-phase commit hash map. We think that using parallelism we can still achieve fast speeds for large data sets distributed across many nodes. </p>
+								<h5>Hope to Achieve</h5>
+                                                                <p>Our strech goal is to implement hash locality using parallelism. This means we could be given some key and then determine which of the existing keys in our nodes is similar to the key and return the value associated with that key again in a fast manner. </p>
+								<h5>Demo</h5>
+                                                                <p>The demo for our project will be a comparison from a normal hash map implementation in increasing sizes of data. We hope to prove that we provide the same characteristics as the current alternatives. While maintaining speed over increasinly large data sets.</p>
+					</div>
+					<a href="#six" class="goto-next scrolly">Next</a>
+				</div>
+			</section>
+
+		<!-- Six -->
+			<section id="six" class="main special">
+				<div class="container">
+					<span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
+					<div class="content">
+						<header class="major">
+							<h2>Platform Choice</h2>
+						</header>
+                                                <p>Using AWS for our nodes is an obvious choice because one of the main features of our system is elasticity. Our cache should have the same deliverables no matter the size of the data set we are handling. Elasticity allows us to achieve this goal while not having extra nodes for no reason.  
+                     				</br>
+						</br>
+	For our language we will most likely write this code in C++ since most of our paralellism will be done using pthreads and communication with the legion library will be more seamless.</p>
+					</div>
+					<a href="#seven" class="goto-next scrolly">Next</a>
+				</div>
+			</section>
+
+		<!-- Seven -->
+			<section id="seven" class="main special">
+				<div class="container">
+					<span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
+					<div class="content">
+						<header class="major">
+							<h2>Schedule</h2>
+						</header>
+                                                <h4>Week 1 - April 8th</h4>
+                                                <p> Familiarity with Legion + One node system with multiple Clients + Decide Design Structure </p>
+                                                <h4>Week 2 - April 15th</h4>
+                                                <p> Achieve desired speed with one node (Optimizations) </p>
+                                                <h4>Week 3 - April 22nd</h4>
+                                                <p> Distribute hash map over multiple nodes + Implement Elasticity </p>
+                                                <h4>Week 4 - April 29th</h4>
+                                                <p> Profile code to determine bottlenecks + Study for Midterm </p>
+                                                <h4>Week 5 - May 6th</h4>
+                                                <p> Write up + Optimizations </p>
+					</div>
+				</div>
+				<footer>
+          				<p> 15-418 Spring 2016 Final Project </p>
+					<ul class="copyright">
+						<li>&copy; Untitled</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li><li>Demo Images: <a href="http://unsplash.com">Unsplash</a></li>
+					</ul>
+				</footer>
+			</section>
+	
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
