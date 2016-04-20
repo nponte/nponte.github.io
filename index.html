@@ -141,24 +141,50 @@
 				</div>
 			</section>
 
+
 		<!-- Seven -->
 			<section id="seven" class="main special">
 				<div class="container">
 					<span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
 					<div class="content">
 						<header class="major">
-							<h2>Schedule</h2>
+							<h2>Project Checkpoint</h2>
+						</header>
+                                                <p> So far we have had two main areas of focus. One of the areas of focus has been Legion, in order to achieve the desired speeds from our hashtable and not have to worry about managing memory regions ourselves we followed the advice of cmu researcher and decided to use Legion as a tool to manage our regions and deal with the low-level GPU parallelism. We have spent a lot of time learning Legion and how to get the most out of Legion understanding their implementation and how to use their namespace. A lot of the power of Legion comes from the management and declerations of regions. </p>
+                                                <p> Our second area of focus is building a GPU hashmap. A lot of research has been done on this topic already in determining the most efficient way of hashing information on a GPU. We have already picked an algorithm based on a paper we read and are now working on porting the algorithm to Legion. </p>
+                     				</br>
+                                                <p>We actually have made a sizable change since proposing the project. One of the main things we realized early on was that if our idea was to implement a high performance hash-map then our current plan of two-phase commit and providing elasticity are orthogonal to that goal. For our strech goals its looking unlikely that we will achieve our strech goals. Legion is proving to be more complicated then we originally inteded and provides more options to speed up our project then we have time to implement. </p>
+                                                <p>For our new goals for the competition we will demo a Legion based GPU hashmap that focuses heavily in performance. We most likely will present our work as a set of graphs showing the speeds for our code compared to more traditional methods of hashing at different sizes of dataset and different number of nodes and hash functions.</p>
+						<p>Our current concerns are showcasing our project. In order for our project to reach the point we want it to be at we need high performance GPUs and large datasets to test it on and to profile our code on. We our currently searching for both of these and while we have found some options nothing has been ideal.</p>
+					</div>
+					<a href="#eight" class="goto-next scrolly">Next</a>
+				</div>
+			</section>
+
+		<!-- Eight -->
+			<section id="eight" class="main special">
+				<div class="container">
+					<span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
+					<div class="content">
+						<header class="major">
+							<h2>Schedule (Updated)</h2>
 						</header>
                                                 <h4>Week 1 - April 8th</h4>
                                                 <p> Familiarity with Legion + One node system with multiple Clients + Decide Design Structure </p>
                                                 <h4>Week 2 - April 15th</h4>
                                                 <p> Achieve desired speed with one node (Optimizations) </p>
-                                                <h4>Week 3 - April 22nd</h4>
-                                                <p> Distribute hash map over multiple nodes + Implement Elasticity </p>
-                                                <h4>Week 4 - April 29th</h4>
-                                                <p> Profile code to determine bottlenecks + Study for Midterm </p>
-                                                <h4>Week 5 - May 6th</h4>
-                                                <p> Write up + Optimizations </p>
+                                                <h4>Week 3 April 22nd (First Half)</h4>
+                                                <p> Legion Code Complete (nponte) Hashing Function Research (yzong) </p>
+                                                <h4>Week 3 April 22nd (Second Half)</h4>
+                                                <p> Debugging Legion (nponte) Integrating Hashing (yzong) </p>
+                                                <h4>Week 4 April 29th (First Half)</h4>
+                                                <p> Profile code (nponte) Testing Different Hash Implementations (yzong) Midterm (yzong+nponte) </p>
+                                                <h4>Week 4 April 29th (Second Half)</h4>
+                                                <p> Testing on Large Datasets (nponte) Benchmarking with parameters (yzong) </p>
+                                                <h4>Week 5 May 6th (First Half)</h4>
+                                                <p> Optimizations (nponte+yzong) </p>
+                                                <h4>Week 5 May 6th (Second Half)</h4>
+                                                <p> Project Report (nponte+yzong) </p>
 					</div>
 				</div>
 				<footer>
