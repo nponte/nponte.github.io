@@ -1,206 +1,209 @@
 <!DOCTYPE HTML>
-<!--
-    Highlights by HTML5 UP
-    html5up.net | @n33co
-    Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
 <html>
-    <head>
-        <title>H H Hash</title>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
-        <link rel="stylesheet" href="assets/css/main.css" />
-        <!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
-        <!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
-    </head>
-    <body>
 
-        <!-- Header -->
-            <section id="header">
-                    <header class="major">
-                    <h1>H H HASH</h1>
-                    <p>Norman Ponte (nponte) Yiming Zong (yzong)</p>
-                    </header>
-            </section>
+<head>
+    <title>H H Hash</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+    <!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+</head>
 
-        <!-- One -->
+<body>
 
-            <section id="one" class="main special">
-                <div class="container">
-                    <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
-                    <div class="content">
-                        <header class="major">
-                            <h2>Summary</h2>
-                        </header>
-                                                <p>The goal of our project is to implement a distributed hash table (DHT) over a GPU cluster. There has been recent work (e.g. <a href="http://idav.ucdavis.edu/~dfalcant/downloads/dissertation.pdf">PhD dissertation</a> by Dan Alcantara) on building hash tables that utilize GPU for parallel hash table operations. And, for this project we aim to push the parallelism further to a GPU cluster, such that the DHT performs and scales better.</p>
-                                                <p>We built our DHT from scratch in order to have full control of the design decisions, including GPU memory management, hash function, load-balancing, and fault-tolerance. Ultimately, we benchmark the performance of the DHT with different combinations of designs and make a final pick.</p>
-                    </div>
-                    <a href="#two" class="goto-next scrolly">Next</a>
-                </div>
-            </section>
-                                
-               <!-- Second One -->
-            <section id="two" class="main special">
-                <div class="container">
-                    <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
-                    <div class="content">
-                        <header class="major">
-                            <h2>Background</h2>
-                        </header>
-                                                <p>In parallel programming, we often run our code with a very large dataset, and one of the most fundamental data structures for allowing fast lookup in large data is a hash table. With this in mind we want to develop a distributed hash-table that achieves significant speedup with larget datasets. Meanwhile, recent work on hash table has shown increasing interests in GPU, since it allows concurrent operations on the hash table and improves read/write throughput massively. Overall, there is great potential in combining the parallism in both approaches, which has never been done before.
-                                            </br>
-                                                </br>
-                                                   For this project, parallelism is a means to achieve an end. In order to achieve high throughput improvements, we need parallelism for higher level of concurrency and load-balancing for more even distribution of the workload. Also, we still need to ensure that the DHT has all the properties of a single-node one (e.g. atomicity), and we achieve them by synchronizing across the cluster.</p>
-                    </div>
-                    <a href="#three" class="goto-next scrolly">Next</a>
-                </div>
-            </section>
+    <!-- Header -->
+    <section id="header">
+        <header class="major">
+            <h1>H H HASH</h1>
+            <p>Norman Ponte (nponte) Yiming Zong (yzong)</p>
+        </header>
+    </section>
 
-               <!-- Third One -->
-            <section id="three" class="main special">
-                <div class="container">
-                    <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
-                    <div class="content">
-                        <header class="major">
-                            <h2>Challenge</h2>
-                        </header>
-                                                <p>Speed is the name of the game. Very intergral to our design is the speed of operations and the idea that what we will be hashing will occupy a very large area. The main challenge for us is to make sure our design works for different workloads and access patterns and optimizations that can be done for different problem sets. 
-                        </br>
-                        </br>
-                                                   Load balancing for a distributed hash table will be an important part of our design we want the data to be balanced between our nodes but at the same time minimizing the communication between nodes in order to minimize overhead. When multiple clients are hashing some objects we don’t know what the mapping of the hash values they are going to insert into the system will be. This means we will have to do balancing as we go which again can prove to be a bottleneck for speed.
-                        </br>
-                        </br>
-                           Fault tolerance will also be a problem. We have to write our parallel code with the idea that the number of nodes in the system and the status of the nodes can be changing at all times and that features we advertise will work. 
-                        </br>
-                        </br>
-                           We also hope to use Legion in order to manage our regions in our different nodes and understand that it will be a challenge to fully understand their system and how to correctly and efficiently use it for our problem.</p>
-                </div>
-                    <a href="#four" class="goto-next scrolly">Next</a>
-                </div>
-            </section>
+    <!-- One -->
 
-               <!-- Fourth One -->
-            <section id="four" class="main special">
-                <div class="container">
-                    <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
-                    <div class="content">
-                        <header class="major">
-                            <h2>Resources</h2>
-                        </header>
-                                                <p>Our current ideas are to use Legion in order to manage our memory regions on different servers. The idea behind this is so that we have some code to start off of and we believe that Legion will allow us to achieve the desired times for our interface. When testing with different nodes we are currently thinking of using AWS so that we can elastically expand and shrink as different amounts of space of required as per the problem space. 
-                                                </br>
-                        </br>
-    Our idea is roughly based around two connected berkley assignments below. These projects comes with starter code and direction which we will have to determine what can help us and what is outside of our deliverables.
-                                                </br>
-                                    </br>
-                            <a href ="http://www-inst.eecs.berkeley.edu/~cs162/fa12/phase3.html"> Berkley Assignment 1 </a>
-                                                </br>
-                        </br>
-                        <a href ="http://www-inst.eecs.berkeley.edu/~cs162/fa12/phase4.html"> Berkley Assignment 2 </a></p>
-                                    </div>
-                    <a href="#five" class="goto-next scrolly">Next</a>
-                </div>
-            </section>
+    <section id="one" class="main special">
+        <div class="container">
+            <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
+            <div class="content">
+                <header class="major">
+                    <h2>Summary</h2>
+                </header>
+                <p>The goal of our project is to implement a distributed hash table (DHT) over a GPU cluster. There has been recent work (e.g. <a href="http://idav.ucdavis.edu/~dfalcant/downloads/dissertation.pdf">PhD dissertation</a> by Dan Alcantara) on building hash tables that utilize GPU for parallel hash table operations. And, for this project we aim to push the parallelism further to a GPU cluster, such that the DHT performs and scales better.</p>
+                <p>We built our DHT from scratch in order to have full control of the design decisions, including GPU memory management, hash function, load-balancing, and fault-tolerance. Ultimately, we benchmark the performance of the DHT with different combinations of designs and make a final pick.</p>
+            </div>
+            <a href="#two" class="goto-next scrolly">Next</a>
+        </div>
+    </section>
+
+    <!-- Second One -->
+    <section id="two" class="main special">
+        <div class="container">
+            <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
+            <div class="content">
+                <header class="major">
+                    <h2>Background</h2>
+                </header>
+                <p>In parallel programming, we often run our code with a very large dataset, and one of the most fundamental data structures for allowing fast lookup in large data is a hash table. With this in mind we want to develop a distributed hash-table that achieves significant speedup with larget datasets. Meanwhile, recent work on hash table has shown increasing interests in GPU, since it allows concurrent operations on the hash table and improves read/write throughput massively. Overall, there is great potential in combining the parallism in both approaches, which has never been done before.
+                    <br />
+                    <br />
+                    For this project, parallelism is a means to achieve an end. In order to achieve high throughput improvements, we need parallelism for higher level of concurrency and load-balancing for more even distribution of the workload. Also, we still need to ensure that the DHT has all the properties of a single-node one (e.g. atomicity), and we achieve them by synchronizing across the cluster.</p>
+            </div>
+            <a href="#three" class="goto-next scrolly">Next</a>
+        </div>
+    </section>
+
+    <!-- Third One -->
+    <section id="three" class="main special">
+        <div class="container">
+            <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
+            <div class="content">
+                <header class="major">
+                    <h2>Challenge</h2>
+                </header>
+                <p>Speed is the name of the game. Very intergral to our design is the speed of operations and the idea that what we will be hashing will occupy a very large area. The main challenge for us is to make sure our design works for different workloads and access patterns and optimizations that can be done for different problem sets.
+                    <br />
+                    <br />
+                    Load balancing for a distributed hash table will be an important part of our design we want the data to be balanced between our nodes but at the same time minimizing the communication between nodes in order to minimize overhead. When multiple clients are hashing some objects we don’t know what the mapping of the hash values they are going to insert into the system will be. This means we will have to do balancing as we go which again can prove to be a bottleneck for speed.
+                    <br />
+                    <br />
+                    Fault tolerance will also be a problem. We have to write our parallel code with the idea that the number of nodes in the system and the status of the nodes can be changing at all times and that features we advertise will work.
+                    <br />
+                    <br />
+                    We also hope to use Legion in order to manage our regions in our different nodes and understand that it will be a challenge to fully understand their system and how to correctly and efficiently use it for our problem.</p>
+            </div>
+            <a href="#four" class="goto-next scrolly">Next</a>
+        </div>
+    </section>
+
+    <!-- Fourth One -->
+    <section id="four" class="main special">
+        <div class="container">
+            <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
+            <div class="content">
+                <header class="major">
+                    <h2>Resources</h2>
+                </header>
+                <p>Our current ideas are to use Legion in order to manage our memory regions on different servers. The idea behind this is so that we have some code to start off of and we believe that Legion will allow us to achieve the desired times for our interface. When testing with different nodes we are currently thinking of using AWS so that we can elastically expand and shrink as different amounts of space of required as per the problem space.
+                    <br />
+                    <br />
+                    Our idea is roughly based around two connected berkley assignments below. These projects comes with starter code and direction which we will have to determine what can help us and what is outside of our deliverables.
+                    <br />
+                    <br />
+                    <a href="http://www-inst.eecs.berkeley.edu/~cs162/fa12/phase3.html"> Berkley Assignment 1 </a>
+                    <br />
+                    <br />
+                    <a href="http://www-inst.eecs.berkeley.edu/~cs162/fa12/phase4.html"> Berkley Assignment 2 </a>
+                </p>
+            </div>
+            <a href="#five" class="goto-next scrolly">Next</a>
+        </div>
+    </section>
 
     <!-- Fifth One -->
-            <section id="five" class="main special">
-                <div class="container">
-                    <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
-                    <div class="content">
-                        <header class="major">
-                            <h2>Goals and Deliverables</h2>
-                        </header>
-                                <h5>Plan to Achieve</h5>
-                                <p>Our main deliverable is a fast distributed two-phase commit hash map. We think that using parallelism we can still achieve fast speeds for large data sets distributed across many nodes. </p>
-                                <h5>Hope to Achieve</h5>
-                                                                <p>Our strech goal is to implement hash locality using parallelism. This means we could be given some key and then determine which of the existing keys in our nodes is similar to the key and return the value associated with that key again in a fast manner. </p>
-                                <h5>Demo</h5>
-                                                                <p>The demo for our project will be a comparison from a normal hash map implementation in increasing sizes of data. We hope to prove that we provide the same characteristics as the current alternatives. While maintaining speed over increasinly large data sets.</p>
-                    </div>
-                    <a href="#six" class="goto-next scrolly">Next</a>
-                </div>
-            </section>
+    <section id="five" class="main special">
+        <div class="container">
+            <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
+            <div class="content">
+                <header class="major">
+                    <h2>Goals and Deliverables</h2>
+                </header>
+                <h5>Plan to Achieve</h5>
+                <p>Our main deliverable is a fast distributed two-phase commit hash map. We think that using parallelism we can still achieve fast speeds for large data sets distributed across many nodes. </p>
+                <h5>Hope to Achieve</h5>
+                <p>Our strech goal is to implement hash locality using parallelism. This means we could be given some key and then determine which of the existing keys in our nodes is similar to the key and return the value associated with that key again in a fast manner. </p>
+                <h5>Demo</h5>
+                <p>The demo for our project will be a comparison from a normal hash map implementation in increasing sizes of data. We hope to prove that we provide the same characteristics as the current alternatives. While maintaining speed over increasinly large data sets.</p>
+            </div>
+            <a href="#six" class="goto-next scrolly">Next</a>
+        </div>
+    </section>
 
-        <!-- Six -->
-            <section id="six" class="main special">
-                <div class="container">
-                    <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
-                    <div class="content">
-                        <header class="major">
-                            <h2>Platform Choice</h2>
-                        </header>
-                                                <p>Using AWS for our nodes is an obvious choice because one of the main features of our system is elasticity. Our cache should have the same deliverables no matter the size of the data set we are handling. Elasticity allows us to achieve this goal while not having extra nodes for no reason.  
-                                    </br>
-                        </br>
-    For our language we will most likely write this code in C++ since most of our paralellism will be done using pthreads and communication with the legion library will be more seamless.</p>
-                    </div>
-                    <a href="#seven" class="goto-next scrolly">Next</a>
-                </div>
-            </section>
+    <!-- Six -->
+    <section id="six" class="main special">
+        <div class="container">
+            <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
+            <div class="content">
+                <header class="major">
+                    <h2>Platform Choice</h2>
+                </header>
+                <p>Using AWS for our nodes is an obvious choice because one of the main features of our system is elasticity. Our cache should have the same deliverables no matter the size of the data set we are handling. Elasticity allows us to achieve this goal while not having extra nodes for no reason.
+                    <br />
+                    <br />
+                    For our language we will most likely write this code in C++ since most of our paralellism will be done using pthreads and communication with the legion library will be more seamless.</p>
+            </div>
+            <a href="#seven" class="goto-next scrolly">Next</a>
+        </div>
+    </section>
 
 
-        <!-- Seven -->
-            <section id="seven" class="main special">
-                <div class="container">
-                    <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
-                    <div class="content">
-                        <header class="major">
-                            <h2>Project Checkpoint</h2>
-                        </header>
-                                                <p> So far we have had two main areas of focus. One of the areas of focus has been Legion, in order to achieve the desired speeds from our hashtable and not have to worry about managing memory regions ourselves we followed the advice of cmu researcher and decided to use Legion as a tool to manage our regions and deal with the low-level GPU parallelism. We have spent a lot of time learning Legion and how to get the most out of Legion understanding their implementation and how to use their namespace. A lot of the power of Legion comes from the management and declerations of regions. </p>
-                                                <p> Our second area of focus is building a GPU hashmap. A lot of research has been done on this topic already in determining the most efficient way of hashing information on a GPU. We have already picked an algorithm based on a paper we read and are now working on porting the algorithm to Legion. </p>
-                                    </br>
-                                                <p>We actually have made a sizable change since proposing the project. One of the main things we realized early on was that if our idea was to implement a high performance hash-map then our current plan of two-phase commit and providing elasticity are orthogonal to that goal. For our strech goals its looking unlikely that we will achieve our strech goals. Legion is proving to be more complicated then we originally inteded and provides more options to speed up our project then we have time to implement. </p>
-                                                <p>For our new goals for the competition we will demo a Legion based GPU hashmap that focuses heavily in performance. We most likely will present our work as a set of graphs showing the speeds for our code compared to more traditional methods of hashing at different sizes of dataset and different number of nodes and hash functions.</p>
-                        <p>Our current concerns are showcasing our project. In order for our project to reach the point we want it to be at we need high performance GPUs and large datasets to test it on and to profile our code on. We our currently searching for both of these and while we have found some options nothing has been ideal.</p>
-                    </div>
-                    <a href="#eight" class="goto-next scrolly">Next</a>
-                </div>
-            </section>
+    <!-- Seven -->
+    <section id="seven" class="main special">
+        <div class="container">
+            <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
+            <div class="content">
+                <header class="major">
+                    <h2>Project Checkpoint</h2>
+                </header>
+                <p> So far we have had two main areas of focus. One of the areas of focus has been Legion, in order to achieve the desired speeds from our hashtable and not have to worry about managing memory regions ourselves we followed the advice of cmu researcher and decided to use Legion as a tool to manage our regions and deal with the low-level GPU parallelism. We have spent a lot of time learning Legion and how to get the most out of Legion understanding their implementation and how to use their namespace. A lot of the power of Legion comes from the management and declerations of regions. </p>
+                <p> Our second area of focus is building a GPU hashmap. A lot of research has been done on this topic already in determining the most efficient way of hashing information on a GPU. We have already picked an algorithm based on a paper we read and are now working on porting the algorithm to Legion. </p>
+                <br />
+                <p>We actually have made a sizable change since proposing the project. One of the main things we realized early on was that if our idea was to implement a high performance hash-map then our current plan of two-phase commit and providing elasticity are orthogonal to that goal. For our strech goals its looking unlikely that we will achieve our strech goals. Legion is proving to be more complicated then we originally inteded and provides more options to speed up our project then we have time to implement. </p>
+                <p>For our new goals for the competition we will demo a Legion based GPU hashmap that focuses heavily in performance. We most likely will present our work as a set of graphs showing the speeds for our code compared to more traditional methods of hashing at different sizes of dataset and different number of nodes and hash functions.</p>
+                <p>Our current concerns are showcasing our project. In order for our project to reach the point we want it to be at we need high performance GPUs and large datasets to test it on and to profile our code on. We our currently searching for both of these and while we have found some options nothing has been ideal.</p>
+            </div>
+            <a href="#eight" class="goto-next scrolly">Next</a>
+        </div>
+    </section>
 
-        <!-- Eight -->
-            <section id="eight" class="main special">
-                <div class="container">
-                    <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
-                    <div class="content">
-                        <header class="major">
-                            <h2>Schedule (Updated)</h2>
-                        </header>
-                                                <h4>Week 1 - April 8th</h4>
-                                                <p> Familiarity with Legion + One node system with multiple Clients + Decide Design Structure </p>
-                                                <h4>Week 2 - April 15th</h4>
-                                                <p> Achieve desired speed with one node (Optimizations) </p>
-                                                <h4>Week 3 April 22nd (First Half)</h4>
-                                                <p> Legion Code Complete (nponte) Hashing Function Research (yzong) </p>
-                                                <h4>Week 3 April 22nd (Second Half)</h4>
-                                                <p> Debugging Legion (nponte) Integrating Hashing (yzong) </p>
-                                                <h4>Week 4 April 29th (First Half)</h4>
-                                                <p> Profile code (nponte) Testing Different Hash Implementations (yzong) Midterm (yzong+nponte) </p>
-                                                <h4>Week 4 April 29th (Second Half)</h4>
-                                                <p> Testing on Large Datasets (nponte) Benchmarking with parameters (yzong) </p>
-                                                <h4>Week 5 May 6th (First Half)</h4>
-                                                <p> Optimizations (nponte+yzong) </p>
-                                                <h4>Week 5 May 6th (Second Half)</h4>
-                                                <p> Project Report (nponte+yzong) </p>
-                    </div>
-                </div>
-                <footer>
-                        <p> 15-418 Spring 2016 Final Project </p>
-                    <ul class="copyright" style="list-style-type: none;">
-                        <li>&copy; Untitled</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li><li>Demo Images: <a href="http://unsplash.com">Unsplash</a></li>
-                    </ul>
-                </footer>
-            </section>
-    
-        <!-- Scripts -->
-            <script src="assets/js/jquery.min.js"></script>
-            <script src="assets/js/jquery.scrollex.min.js"></script>
-            <script src="assets/js/jquery.scrolly.min.js"></script>
-            <script src="assets/js/skel.min.js"></script>
-            <script src="assets/js/util.js"></script>
-            <!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
-            <script src="assets/js/main.js"></script>
+    <!-- Eight -->
+    <section id="eight" class="main special">
+        <div class="container">
+            <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
+            <div class="content">
+                <header class="major">
+                    <h2>Schedule (Updated)</h2>
+                </header>
+                <h4>Week 1 - April 8th</h4>
+                <p> Familiarity with Legion + One node system with multiple Clients + Decide Design Structure </p>
+                <h4>Week 2 - April 15th</h4>
+                <p> Achieve desired speed with one node (Optimizations) </p>
+                <h4>Week 3 April 22nd (First Half)</h4>
+                <p> Legion Code Complete (nponte) Hashing Function Research (yzong) </p>
+                <h4>Week 3 April 22nd (Second Half)</h4>
+                <p> Debugging Legion (nponte) Integrating Hashing (yzong) </p>
+                <h4>Week 4 April 29th (First Half)</h4>
+                <p> Profile code (nponte) Testing Different Hash Implementations (yzong) Midterm (yzong+nponte) </p>
+                <h4>Week 4 April 29th (Second Half)</h4>
+                <p> Testing on Large Datasets (nponte) Benchmarking with parameters (yzong) </p>
+                <h4>Week 5 May 6th (First Half)</h4>
+                <p> Optimizations (nponte+yzong) </p>
+                <h4>Week 5 May 6th (Second Half)</h4>
+                <p> Project Report (nponte+yzong) </p>
+            </div>
+        </div>
+        <footer>
+            <p> 15-418 Spring 2016 Final Project </p>
+            <ul class="copyright" style="list-style-type: none;">
+                <li>&copy; Untitled</li>
+                <li>Design: <a href="http://html5up.net">HTML5 UP</a>
+                </li>
+                <li>Demo Images: <a href="http://unsplash.com">Unsplash</a>
+                </li>
+            </ul>
+        </footer>
+    </section>
 
-    </body>
+    <!-- Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.scrollex.min.js"></script>
+    <script src="assets/js/jquery.scrolly.min.js"></script>
+    <script src="assets/js/skel.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+    <script src="assets/js/main.js"></script>
+
+</body>
+
 </html>
