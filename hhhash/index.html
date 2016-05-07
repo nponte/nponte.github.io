@@ -31,7 +31,7 @@
                     <h2>Summary</h2>
                 </header>
                 <p>The goal of our project is to implement a GPU-based hash table that uses cuckoo hashing, and we compare its performance against <code>boost::unordered_map</code>, a fine-tuned version of CPU-based hash table. We built our hash table from scratch in order to have full control of the design decisions, including GPU memory management, hash function, and bucket-rebalancing. Ultimately, we benchmark the performance of the hash table with different locking mechanisms, including spin-lock, mutex, and other C++-native lock constructs. Also, we measure the memory effiency of our GPU implemtation, since a GPU-based hash table would be bound by the amount of memory on the GPU.</p>
-                <p>Our source code so far can be downloaded <a href="/assets/hhhash.zip">here</a>. It can be compiled and run on <code>latedays</code>.
+                <p>Our source code can be downloaded <a href="/assets/hhhash.zip">here</a>. It can be compiled and run on <code>latedays</code>. As of now, our hash table is already correct, and we are working on generating test traces and benchmarking it on <code>latedays</code>.</p>
             </div>
             <a href="#two" class="goto-next scrolly">Next</a>
         </div>
@@ -62,9 +62,8 @@
                 <header class="major">
                     <h2>Challenge</h2>
                 </header>
-                <p>Speed is the name of the game. Very intergral to our design is the speed of operations and the idea that what we will be hashing will occupy a very large area. The main challenge for us is to make sure our design works for different workloads and access patterns and optimizations that can be done for different problem sets.
-                    
-                We also hope to use Legion in order to manage our regions in our different nodes and understand that it will be a challenge to fully understand their system and how to correctly and efficiently use it for our problem.</p>
+                <p>Speed is the name of the game. Very intergral to our design is the speed of operations and the idea that what we are working with larget datasets. The main challenge for us is to make sure our design works for different workloads and access patterns and optimizations that can be done for different problem sets. Meanwhile, in order to reduce the amount of CUDA code we need to write manually, we need to learn how to use <a href="http://docs.nvidia.com/cuda/thrust/">Thrust library</a></p>.
+                <p>Meanwhile, in order to gain enough background knowledge on the implementations of hash table, we need to read a lot of papers and dissertations, which are listed in the references section. We mainly focus on papers about open addressing (especially cuckoo hashing) and lock-free hash table implemetations.</p>
             </div>
             <a href="#four" class="goto-next scrolly">Next</a>
         </div>
