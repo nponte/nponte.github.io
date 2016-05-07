@@ -30,8 +30,8 @@
                 <header class="major">
                     <h2>Summary</h2>
                 </header>
-                <p>The goal of our project is to implement a distributed hash table (DHT) over a GPU cluster. There has been recent work (e.g. <a href="http://idav.ucdavis.edu/~dfalcant/downloads/dissertation.pdf">PhD dissertation</a> by Dan Alcantara) on building hash tables that utilize GPU for parallel hash table operations. And, for this project we aim to push the parallelism further to a GPU cluster, such that the DHT performs and scales better.</p>
-                <p>We built our DHT from scratch in order to have full control of the design decisions, including GPU memory management, hash function, load-balancing, and fault-tolerance. Ultimately, we benchmark the performance of the DHT with different combinations of designs and make a final pick.</p>
+                <p>The goal of our project is to implement a GPU-based hash table that uses cuckoo hashing, and we compare its performance against <code>boost::unordered_map</code>, a fine-tuned version of CPU-based hash table. We built our hash table from scratch in order to have full control of the design decisions, including GPU memory management, hash function, and bucket-rebalancing. Ultimately, we benchmark the performance of the hash table with different locking mechanisms, including spin-lock, mutex, and other C++-native lock constructs. Also, we measure the memory effiency of our GPU implemtation, since a GPU-based hash table would be bound by the amount of memory on the GPU.</p>
+                <p>Our source code so far can be downloaded <a href="/assets/hhhash.zip">here</a>. It can be compiled and run on <code>latedays</code>.
             </div>
             <a href="#two" class="goto-next scrolly">Next</a>
         </div>
@@ -45,10 +45,10 @@
                 <header class="major">
                     <h2>Background</h2>
                 </header>
-                <p>In parallel programming, we often run our code with a very large dataset, and one of the most fundamental data structures for allowing fast lookup in large data is a hash table. With this in mind we want to develop a distributed hash-table that achieves significant speedup with larget datasets. Meanwhile, recent work on hash table has shown increasing interests in GPU, since it allows concurrent operations on the hash table and improves read/write throughput massively. Overall, there is great potential in combining the parallism in both approaches, which has never been done before.
+                <p>In parallel programming, we often run our code with a very large dataset, and one of the most fundamental data structures for allowing fast lookup in large data is a hash table. With this in mind we want to develop a hash-table that achieves significant speedup with larget datasets. While many fine-tuned CPU-based hash tables are available and commonly used, GPU-based hash tables have only appeared in recent PhD-level work. A GPU-based hash table allows faster hashing and concurrent operations, and thus it has the potential of improving read/write throughput massively.
                     <br />
                     <br />
-                    For this project, parallelism is a means to achieve an end. In order to achieve high throughput improvements, we need parallelism for higher level of concurrency and load-balancing for more even distribution of the workload. Also, we still need to ensure that the DHT has all the properties of a single-node one (e.g. atomicity), and we achieve them by synchronizing across the cluster.</p>
+                    For this project, parallelism is a means to achieve an end. In order to achieve high throughput improvements, we need parallelism for higher level of concurrency and rebalancing for more even distribution of the workload among the GPU blocks. Meanwhile, we still need to ensure that our hash table has all the properties of a CPU-based one (e.g. atomicity) by applying synchronization primitives. As learnt in the class, synchronization overhead can be significant for a highly-contended shared resource, and thus it is necessary to evaluate the performance of different synchronization primites in this scenario.</p>
             </div>
             <a href="#three" class="goto-next scrolly">Next</a>
         </div>
@@ -63,15 +63,8 @@
                     <h2>Challenge</h2>
                 </header>
                 <p>Speed is the name of the game. Very intergral to our design is the speed of operations and the idea that what we will be hashing will occupy a very large area. The main challenge for us is to make sure our design works for different workloads and access patterns and optimizations that can be done for different problem sets.
-                    <br />
-                    <br />
-                    Load balancing for a distributed hash table will be an important part of our design we want the data to be balanced between our nodes but at the same time minimizing the communication between nodes in order to minimize overhead. When multiple clients are hashing some objects we don’t know what the mapping of the hash values they are going to insert into the system will be. This means we will have to do balancing as we go which again can prove to be a bottleneck for speed.
-                    <br />
-                    <br />
-                    Fault tolerance will also be a problem. We have to write our parallel code with the idea that the number of nodes in the system and the status of the nodes can be changing at all times and that features we advertise will work.
-                    <br />
-                    <br />
-                    We also hope to use Legion in order to manage our regions in our different nodes and understand that it will be a challenge to fully understand their system and how to correctly and efficiently use it for our problem.</p>
+                    
+                We also hope to use Legion in order to manage our regions in our different nodes and understand that it will be a challenge to fully understand their system and how to correctly and efficiently use it for our problem.</p>
             </div>
             <a href="#four" class="goto-next scrolly">Next</a>
         </div>
