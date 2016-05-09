@@ -60,18 +60,43 @@
                 </header>
                 <p>The data structure that we try to parallelize in this project is a hash table. A hash table manages a collection of key-value pairs by supporting the three operations: <code>insert(k,v)</code>, <code>lookup(k)</code>, and <code>delete(k)</code>. The keys and values can be of arbitrary types as long as the key is hashable, and the advantage of a hash table over, say, binary search on a sorted list is that hash table allows all three operations to be completed in constant-time (on average). Existing implementations of hash table are varied, including linear/quadratic probing, separate chaining, and cuckoo hashing. And, for this project we focus on cuckoo hashing because its parallelization is neither trivial nor widely-solved.</p>
 
-                <p> $m$-Cuckoo hashing is an open-addressing approach that hashes a key to one of $m$ hash value candidates, i.e. $\{ h_i(k) \mid i\in[m] \}$.
+                <p> $m$-Cuckoo hashing is an open-addressing approach that hashes a key to one of $m$ hash value candidates, i.e. $\{ h_i(k) \mid i\in[m] \}$. Cuckoo hashing in done in waves. First you hash everything according the first hashing function and place it in the hash table. Anything that pops out goes into the second and so on depeding on the amount of cuckoo hash functions you have. We also use KFS hashing. KFS hashing is perfect hashing where each bucket has n squared space for n elements. This assure that you have almost no collisions.
+ 
                  In parallel programming, we often run our code with a very large dataset, and one of the most fundamental data structures for allowing fast lookup in large data is a hash table. With this in mind we want to develop a hash-table that achieves significant speedup with larget datasets. While many fine-tuned CPU-based hash tables are available and commonly used, GPU-based hash tables have only appeared in recent PhD-level work. A GPU-based hash table allows faster hashing and concurrent operations, and thus it has the potential of improving read/write throughput massively.
                     <br />
                     <br />
-                    For this project, parallelism is a means to achieve an end. In order to achieve high throughput improvements, we need parallelism for higher level of concurrency and rebalancing for more even distribution of the workload among the GPU blocks. Meanwhile, we still need to ensure that our hash table has all the properties of a CPU-based one (e.g. atomicity) by applying synchronization primitives. As learnt in the class, synchronization overhead can be significant for a highly-contended shared resource, and thus it is important to select the most efficient synchronization primitives in this scenario.</p>
+                    For this project, parallelism is a means to achieve an end. In order to achieve high throughput improvements, we need parallelism for higher level of concurrency and rebalancing for more even distribution of the workload among the GPU blocks. Meanwhile, we still need to ensure that our hash table has all the properties of a CPU-based one (e.g. atomicity) by applying synchronization primitives. As learnt in the class, synchronization overhead can be significant for a highly-contended shared resource, and thus it is important to select the most efficient synchronization primitives in this scenario. 
+		    One of the main problems with GPU hash tables is that they exhibit almost no natural locality. The user decides what is changed in the hash table when and this makes the work very difficult to characterize and prepare for. By breaking the original hash into buckets we are decreasing the dependecies in the program. With cuckoo hash however you will always have dependecies in the going through of the different hashing functions for the different cuckoo buckets.</p>
             </div>
             <a href="#three" class="goto-next scrolly">Next</a>
         </div>
     </section>
 
     <!-- Third One -->
-    <section id="three" class="main special">
+    <section id="third" class="main special">
+        <div class="container">
+            <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
+            <div class="content">
+                <header class="major">
+                    <h2>Approach</h2>
+                    </header>
+                    <p>As mentioned above our approach is FKS hashing into cuckoo hash tables. Each input elements first finds a bucket then cuckoo hashing is performed with other elements in that bucket. If no layout for the bucket is found we rehash the entire bucket after providing the bucket with new hash functions.
+                   We parallelize all the acceses to the hash table over the input vector given by the user. Our final product is a library for people to use as long as they have access to a GPU. Our code is written using the thrust library for CUDA. The reason thrust was chosen was that we wanted to rapidly prototype through different algorithms and implementations in order to determine which one to use. While the ideas behind our algorithm arent original the implementation and tuning is original and we wanted to be able to rapidly switch if something we were headed in the wrong direction.
+                    <br />
+                    <br />
+                    Our workload is broken into blocks which are then processed by device kernels which modify the underlying hash map implementations. The theory behind our algorithm is sequential but it has many time been made parallel in many ways. 
+                    Our first implentation was more parallel then our current implementation but the cuckoo hashing wasnt done in the right order. We saw that if we randomized the cuckoo hashing order we could do more operations in parallel and we though that if we allowed it to loop more often it would eventually find a layout in memory that fit all the inputs. However the randomization of the cuckoo functions order seemed to completely halt the algorithm with very few buckets finding a correct layout. 
+                    Another iteration was that at first we wanted the buckets to be worked upon in sequence so that we could exploit cache locality. If we kept the buckets low we hoped that it would fit and cache and the reordering with cuckoo would see a speedup. This turned out to be outweighed by the negatives of that approach. Our system was taking 80% of the time it was in the GPU in our sort functions which took the keys and sorted then by the bucket then belonged too. This meant we were losing time in general. We also found that we needed to have a large bucket size but the pigeon hole principle and the fact that too many collisions were occuring with the hashing functions. 
+                    After deciding on our final implementation we had many parameters to change and determine the best layout. These were how full buckets normally are, when to make more buckets, when to coalesce old buckets, how many loop iterations do we allow the cuckoo bucket to work through before rebalancing the bucket with new hash functions. Current code has the values that were most optiminal for our traces but no doubt these numbers would change for many different reasons so we tried to map our their characteristics.
+                </header>
+           </div>
+            <a href="#four" class="goto-next scrolly">Next</a>
+        </div>
+    </section>
+
+ 
+    <!-- Four One -->
+    <section id="four" class="main special">
         <div class="container">
             <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
             <div class="content">
@@ -82,12 +107,12 @@
                 <p>Meanwhile, in order to gain enough background knowledge on efficient implementations of hash table, we need to read a lot of papers and dissertations, which are listed in the references section. We mainly focus on papers about open addressing (especially cuckoo hashing) and lock-free hash table implemetations; meanwhile, we avoid browsing code repos on Github such that we could come up with our own design entirely without being influenced by existing solutions.</p>
                 <p>As we read more about cuckoo hashing, we noticed that it is intrinsically a sequential algorithm. More specifically, each key can be potentially hashed into two locations, and collisions are resolved by forced eviction of the previous key. Therefore, it can be tricky to parallelize different conflicting "key insertion" requests.</p>
             </div>
-            <a href="#four" class="goto-next scrolly">Next</a>
+            <a href="#five" class="goto-next scrolly">Next</a>
         </div>
     </section>
 
     <!-- Fourth One -->
-    <section id="four" class="main special">
+    <section id="five" class="main special">
         <div class="container">
             <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
             <div class="content">
@@ -100,12 +125,12 @@
 
                 <p>While reading about state-of-the-art implementations of hash tables based on GPU, we came across the PhD dissertation by Dan Alcantara, which gives a comprehensive discussion about hashing (including open-addressing and cuckoo-hashing) and their GPU-based implementations. From the dissertation, we mainly learned the mechanism of cuckoo hashing, and how GPU allows massive parallelism with hash tables.</p>
             </div>
-            <a href="#five" class="goto-next scrolly">Next</a>
+            <a href="#six" class="goto-next scrolly">Next</a>
         </div>
     </section>
 
-    <!-- Fifth One -->
-    <section id="five" class="main special">
+    <!-- Six One -->
+    <section id="six" class="main special">
         <div class="container">
             <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
             <div class="content">
@@ -120,12 +145,12 @@
                 <h5>Demo</h5>
                 <p>The demo for our project will be a comparison chart for a CPU-based hash table implemtation and our GPU-based hash table for different workloads (e.g. increasing R/W size). We hope to show that our hash table outperforms CPU-based hash tables and is scalable within the bound of GPU memory.</p>
             </div>
-            <a href="#six" class="goto-next scrolly">Next</a>
+            <a href="#seven" class="goto-next scrolly">Next</a>
         </div>
     </section>
 
-    <!-- Six -->
-    <section id="six" class="main special">
+    <!-- Seven -->
+    <section id="seven" class="main special">
         <div class="container">
             <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
             <div class="content">
@@ -137,13 +162,13 @@
                     <br />
                     As for language choice, we will most likely write the hash table in C++ and CUDA since we had similar experience in <a href="http://15418.courses.cs.cmu.edu/spring2016/article/4">Assignment Two</a> in this course; we will also use Thrust library to make our life easier with CUDA. For generating test traces, we will use Python as it allows easy list manipulation.</p>
             </div>
-            <a href="#seven" class="goto-next scrolly">Next</a>
+            <a href="#eight" class="goto-next scrolly">Next</a>
         </div>
     </section>
 
 
-    <!-- Seven -->
-    <section id="seven" class="main special">
+    <!-- eight -->
+    <section id="eight" class="main special">
         <div class="container">
             <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
             <div class="content">
@@ -157,12 +182,12 @@
                 <p>For our new goals for the competition we will demo a Legion based GPU hashmap that focuses heavily in performance. We most likely will present our work as a set of graphs showing the speeds for our code compared to more traditional methods of hashing at different sizes of dataset and different number of nodes and hash functions.</p>
                 <p>Our current concerns are showcasing our project. In order for our project to reach the point we want it to be at we need high performance GPUs and large datasets to test it on and to profile our code on. We our currently searching for both of these and while we have found some options nothing has been ideal.</p>
             </div>
-            <a href="#eight" class="goto-next scrolly">Next</a>
+            <a href="#nine" class="goto-next scrolly">Next</a>
         </div>
     </section>
 
-    <!-- Eight -->
-    <section id="eight" class="main special">
+    <!-- Nine -->
+    <section id="nine" class="main special">
         <div class="container">
             <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
             <div class="content">
