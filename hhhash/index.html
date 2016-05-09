@@ -9,6 +9,12 @@
     <link rel="stylesheet" href="assets/css/main.css" />
     <!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
     <!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+</script>
 </head>
 
 <body>
@@ -52,7 +58,10 @@
                 <header class="major">
                     <h2>Background</h2>
                 </header>
-                <p>In parallel programming, we often run our code with a very large dataset, and one of the most fundamental data structures for allowing fast lookup in large data is a hash table. With this in mind we want to develop a hash-table that achieves significant speedup with larget datasets. While many fine-tuned CPU-based hash tables are available and commonly used, GPU-based hash tables have only appeared in recent PhD-level work. A GPU-based hash table allows faster hashing and concurrent operations, and thus it has the potential of improving read/write throughput massively.
+                <p>The data structure that we try to parallelize in this project is a hash table. A hash table manages a collection of key-value pairs by supporting the three operations: <code>insert(k,v)</code>, <code>lookup(k)</code>, and <code>delete(k)</code>. The keys and values can be of arbitrary types as long as the key is hashable, and the advantage of a hash table over, say, binary search on a sorted list is that hash table allows all three operations to be completed in constant-time (on average). Existing implementations of hash table are varied, including linear/quadratic probing, separate chaining, and cuckoo hashing. And, for this project we focus on cuckoo hashing because its parallelization is neither trivial nor widely-solved.</p>
+
+                <p> $m$-Cuckoo hashing is an open-addressing approach that hashes a key to one of $m$ hash value candidates, i.e. $\{ h_i(k) \mid i\in[m] \}$.
+                 In parallel programming, we often run our code with a very large dataset, and one of the most fundamental data structures for allowing fast lookup in large data is a hash table. With this in mind we want to develop a hash-table that achieves significant speedup with larget datasets. While many fine-tuned CPU-based hash tables are available and commonly used, GPU-based hash tables have only appeared in recent PhD-level work. A GPU-based hash table allows faster hashing and concurrent operations, and thus it has the potential of improving read/write throughput massively.
                     <br />
                     <br />
                     For this project, parallelism is a means to achieve an end. In order to achieve high throughput improvements, we need parallelism for higher level of concurrency and rebalancing for more even distribution of the workload among the GPU blocks. Meanwhile, we still need to ensure that our hash table has all the properties of a CPU-based one (e.g. atomicity) by applying synchronization primitives. As learnt in the class, synchronization overhead can be significant for a highly-contended shared resource, and thus it is important to select the most efficient synchronization primitives in this scenario.</p>
