@@ -111,8 +111,29 @@
         </div>
     </section>
 
-    <!-- Fourth One -->
+    <!-- Fifth One -->
     <section id="five" class="main special">
+        <div class="container">
+            <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
+            <div class="content">
+                <header class="major">
+                    <h2>Results</h2>
+                    </header>
+                    <p> There are three main metrics that are used to categorize hash tables. Lookup speed, memory footprint, and construction time. Most important to us is lookup speed, this was our common case. Lookup speed is measured in throughput per input elements and this graph can be found at the top of the page with a link to the rest of our graphs. Cuckoo hashing has O(1) lookup time and it is very noticable when doing a lookup of a large amount of elements. </p>
+                    <br />
+                    <p> In order to test we created traces and ran them through construction, insertion, deletion, and lookup. If our hash function is as claimed then the input should not matter it should always hash evenly between the buckets. In the real world the user would include our library in their project and pass in as arguments the input vectors to our hash table. </p>
+                    <br />
+                    <p> There were two main factors in limiting our speedup. The first is the more obvious of the factors, we run our commands on large input arrays and therefore have to copy over the input array into device code in order to run out hashing algorithms on it. With very large input size this will make us memory bound. Not only then but we also move large chunks from device memory to host memory when returning the results to the user. The second slowdown major slowdown comes from divergence. In cuckoo hashing when the first bucket hash fails all the blocks move onto the second bucket hash. Doing testing we found out that ~70% of our elements found a spot after the first hashing and therefore diverged from the othe 30% that had not found a block. This happens again before we finally converge the blocks.
+                   <br />
+                   <p> Two other factors limiting speedup is the lack of locality when doing the thrust operations there was little locality to be found. To solve this we would of had to use sort which was more expensive then the locality issues it solved. Finally we have atomic increments and decrements to variables which slowed down the system but were essential to the correctness of the system. </p>
+                </header>
+          </div>
+            <a href="#six" class="goto-next scrolly">Next</a>
+        </div>
+    </section>
+
+    <!-- Six One -->
+    <section id="six" class="main special">
         <div class="container">
             <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
             <div class="content">
@@ -121,16 +142,24 @@
                 </header>
                 <p>The original idea of the project comes from a pair of Berkeley assignments (<a href="http://www-inst.eecs.berkeley.edu/~cs162/fa12/phase3.html">1</a>, <a href="http://www-inst.eecs.berkeley.edu/~cs162/fa12/phase4.html">2</a>) on distributed hash table over multiple nodes. Since the assignments are more related to distributed systems (e.g. loda-balancing, fault-tolerance), for this project we decided to make a hash table on a single node, but based on a GPU. This is highly relevant to what has been taught in the class, as the project require us to write CUDA code and design efficient parallelism and synchronization.</p>
 
-                <p>At the beginning, our original idea was to use <a href="http://legion.stanford.edu/">Legion</a> to implement a distributed hash table that allows automatic load-balancing. Even though Legion makes it easier to manipulate data structures in shared memory, we had major issues integrating it in our implementation, and thus we decided to abandon the idea and write the GPU-based hash table from scratch.</p>
+                <p>At the beginning, our original idea was to use <a href="http://legion.stanford.edu/">Legion</a> to implement a distributed hash table that allows automatic load-balancing. Even though Legion makes it easier to manipulate data structures in shared memory, we had major issues integrating it in our implementation, and thus we decided to abandon the idea and write the GPU-based hash table from scratch. One of the main reasons we wanted to use Legion was only because our original idea was a distributed GPU hash table. However as we were writting the distributed code we realized that the overhead for a distributed GPU hash table makes it very niche. Since GPU has less memory then the CPU then a CPU implementation with no communication overhead would outdo most implementations we could resonaly come up with. </p>
 
-                <p>While reading about state-of-the-art implementations of hash tables based on GPU, we came across the PhD dissertation by Dan Alcantara, which gives a comprehensive discussion about hashing (including open-addressing and cuckoo-hashing) and their GPU-based implementations. From the dissertation, we mainly learned the mechanism of cuckoo hashing, and how GPU allows massive parallelism with hash tables.</p>
+                <p>While reading about state-of-the-art implementations of hash tables based on GPU, we came across the PhD dissertation by Dan Alcantara, which gives a comprehensive discussion about hashing (including open-addressing and cuckoo-hashing) and their GPU-based implementations. From the dissertation, we mainly learned the mechanism of cuckoo hashing, and how GPU allows massive parallelism with hash tables. 
+                <br />
+                <a href="http://idav.ucdavis.edu/~dfalcant/downloads/dissertation.pdf">Efficient Hash Tables on the GPU</a>.
+                <br />
+                <br />
+                Additional Resources
+                <br />
+                <a href="http://research.microsoft.com/en-us/um/people/hoppe/perfecthash.pdf">Perfect Spatial Hashing</a>.
+                </p>
             </div>
-            <a href="#six" class="goto-next scrolly">Next</a>
+            <a href="#seven" class="goto-next scrolly">Next</a>
         </div>
     </section>
 
-    <!-- Six One -->
-    <section id="six" class="main special">
+    <!-- sven One -->
+    <section id="seven" class="main special">
         <div class="container">
             <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
             <div class="content">
@@ -145,12 +174,12 @@
                 <h5>Demo</h5>
                 <p>The demo for our project will be a comparison chart for a CPU-based hash table implemtation and our GPU-based hash table for different workloads (e.g. increasing R/W size). We hope to show that our hash table outperforms CPU-based hash tables and is scalable within the bound of GPU memory.</p>
             </div>
-            <a href="#seven" class="goto-next scrolly">Next</a>
+            <a href="#eight" class="goto-next scrolly">Next</a>
         </div>
     </section>
 
-    <!-- Seven -->
-    <section id="seven" class="main special">
+    <!-- eight -->
+    <section id="eight" class="main special">
         <div class="container">
             <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
             <div class="content">
@@ -162,13 +191,13 @@
                     <br />
                     As for language choice, we will most likely write the hash table in C++ and CUDA since we had similar experience in <a href="http://15418.courses.cs.cmu.edu/spring2016/article/4">Assignment Two</a> in this course; we will also use Thrust library to make our life easier with CUDA. For generating test traces, we will use Python as it allows easy list manipulation.</p>
             </div>
-            <a href="#eight" class="goto-next scrolly">Next</a>
+            <a href="#nine" class="goto-next scrolly">Next</a>
         </div>
     </section>
 
 
-    <!-- eight -->
-    <section id="eight" class="main special">
+    <!-- nine -->
+    <section id="nine" class="main special">
         <div class="container">
             <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
             <div class="content">
@@ -182,12 +211,12 @@
                 <p>For our new goals for the competition we will demo a Legion based GPU hashmap that focuses heavily in performance. We most likely will present our work as a set of graphs showing the speeds for our code compared to more traditional methods of hashing at different sizes of dataset and different number of nodes and hash functions.</p>
                 <p>Our current concerns are showcasing our project. In order for our project to reach the point we want it to be at we need high performance GPUs and large datasets to test it on and to profile our code on. We our currently searching for both of these and while we have found some options nothing has been ideal.</p>
             </div>
-            <a href="#nine" class="goto-next scrolly">Next</a>
+            <a href="#ten" class="goto-next scrolly">Next</a>
         </div>
     </section>
 
-    <!-- Nine -->
-    <section id="nine" class="main special">
+    <!-- ten -->
+    <section id="ten" class="main special">
         <div class="container">
             <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
             <div class="content">
