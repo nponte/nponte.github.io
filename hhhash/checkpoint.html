@@ -1,0 +1,197 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>H H Hash (Proposal &amp; Checkpoint)</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+    <!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+</head>
+
+<body>
+
+    <!-- Header -->
+    <section id="header">
+        <header class="major">
+            <h1>H H HASH</h1>
+            <p style="font-weight: 700"><span>Proposal &amp; Checkpoint</span></p>
+            <p style="margin-top: 2.5em; font-weight: 500">Norman Ponte (nponte) &nbsp;&nbsp; Yiming Zong (yzong)</p>
+        </header>
+    </section>
+
+    <!-- One -->
+
+    <section id="one" class="main special">
+        <div class="container">
+            <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
+            <div class="content">
+                <header class="major">
+                    <h2>Summary</h2>
+                </header>
+                <p>The goal of our project is to implement a GPU-based hash table that uses cuckoo hashing, and we compare its performance against <code>boost::unordered_map</code>, a fine-tuned version of CPU-based hash table. We built our hash table from scratch in order to have full control of the design decisions, including GPU memory management, hash function, and bucket-rebalancing. Ultimately, we benchmark the performance of the hash table with different locking mechanisms, including spin-lock, mutex, and other C++-native lock constructs. Also, we measure the GPU-memory effiency of our implemenation, since a GPU-based hash table would be bound by the amount of memory on the GPU.</p>
+                <p>Our source code can be downloaded <a href="/assets/hhhash.zip">here</a>. It can be compiled and run on <code>latedays</code>. As of now, our hash table is already correct, and we are working on generating test traces and benchmarking it on <code>latedays</code>.</p>
+            </div>
+            <a href="#two" class="goto-next scrolly">Next</a>
+        </div>
+    </section>
+
+    <!-- Second One -->
+    <section id="two" class="main special">
+        <div class="container">
+            <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
+            <div class="content">
+                <header class="major">
+                    <h2>Background</h2>
+                </header>
+                <p>In parallel programming, we often run our code with a very large dataset, and one of the most fundamental data structures for allowing fast lookup in large data is a hash table. With this in mind we want to develop a hash-table that achieves significant speedup with larget datasets. While many fine-tuned CPU-based hash tables are available and commonly used, GPU-based hash tables have only appeared in recent PhD-level work. A GPU-based hash table allows faster hashing and concurrent operations, and thus it has the potential of improving read/write throughput massively.
+                    <br />
+                    <br />
+                    For this project, parallelism is a means to achieve an end. In order to achieve high throughput improvements, we need parallelism for higher level of concurrency and rebalancing for more even distribution of the workload among the GPU blocks. Meanwhile, we still need to ensure that our hash table has all the properties of a CPU-based one (e.g. atomicity) by applying synchronization primitives. As learnt in the class, synchronization overhead can be significant for a highly-contended shared resource, and thus it is important to select the most efficient synchronization primitives in this scenario.</p>
+            </div>
+            <a href="#three" class="goto-next scrolly">Next</a>
+        </div>
+    </section>
+
+    <!-- Third One -->
+    <section id="three" class="main special">
+        <div class="container">
+            <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
+            <div class="content">
+                <header class="major">
+                    <h2>Challenge</h2>
+                </header>
+                <p>Speed is the name of the game. Very intergral to our design is the speed of operations and the idea that what we are working with larget datasets. The main challenge for us is to make sure that our design works for different workloads and access patterns. Also, in order to reduce the amount of CUDA code that we write manually, we need to learn how to use <a href="http://docs.nvidia.com/cuda/thrust/">Thrust library</a></p>.
+                <p>Meanwhile, in order to gain enough background knowledge on efficient implementations of hash table, we need to read a lot of papers and dissertations, which are listed in the references section. We mainly focus on papers about open addressing (especially cuckoo hashing) and lock-free hash table implemetations; meanwhile, we avoid browsing code repos on Github such that we could come up with our own design entirely without being influenced by existing solutions.</p>
+                <p>As we read more about cuckoo hashing, we noticed that it is intrinsically a sequential algorithm. More specifically, each key can be potentially hashed into two locations, and collisions are resolved by forced eviction of the previous key. Therefore, it can be tricky to parallelize different conflicting "key insertion" requests.</p>
+            </div>
+            <a href="#four" class="goto-next scrolly">Next</a>
+        </div>
+    </section>
+
+    <!-- Fourth One -->
+    <section id="four" class="main special">
+        <div class="container">
+            <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
+            <div class="content">
+                <header class="major">
+                    <h2>Resources</h2>
+                </header>
+                <p>The original idea of the project comes from a pair of Berkeley assignments (<a href="http://www-inst.eecs.berkeley.edu/~cs162/fa12/phase3.html">1</a>, <a href="http://www-inst.eecs.berkeley.edu/~cs162/fa12/phase4.html">2</a>) on distributed hash table over multiple nodes. Since the assignments are more related to distributed systems (e.g. loda-balancing, fault-tolerance), for this project we decided to make a hash table on a single node, but based on a GPU. This is highly relevant to what has been taught in the class, as the project require us to write CUDA code and design efficient parallelism and synchronization.</p>
+
+                <p>At the beginning, our original idea was to use <a href="http://legion.stanford.edu/">Legion</a> to implement a distributed hash table that allows automatic load-balancing. Even though Legion makes it easier to manipulate data structures in shared memory, we had major issues integrating it in our implementation, and thus we decided to abandon the idea and write the GPU-based hash table from scratch.</p>
+
+                <p>While reading about state-of-the-art implementations of hash tables based on GPU, we came across the PhD dissertation by Dan Alcantara, which gives a comprehensive discussion about hashing (including open-addressing and cuckoo-hashing) and their GPU-based implementations. From the dissertation, we mainly learned the mechanism of cuckoo hashing, and how GPU allows massive parallelism with hash tables.</p>
+            </div>
+            <a href="#five" class="goto-next scrolly">Next</a>
+        </div>
+    </section>
+
+    <!-- Fifth One -->
+    <section id="five" class="main special">
+        <div class="container">
+            <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
+            <div class="content">
+                <header class="major">
+                    <h2>Goals and Deliverables</h2>
+                </header>
+                <h5>Plan to Achieve</h5>
+                <p>Our main deliverable is a fine-tuned, GPU-based hash table with two-level cuckoo hashing. We are confident that the performance of our hash table will outperform <code>boost::unordered_map</code> significantly.
+
+                <h5>Hope to Achieve</h5>
+                <p>Our strech goal is to implement a hybrid hash table. In our literature review, we realized that GPU-based hash table is bound by GPU memory; therefore, if we need to store billions of key-value pairs, GPU memory may run out, and our project would no longer be useful. However, if we can use CPU-based hash map as a "spillover area" and only keep the "heavy-hitters" in GPU, we would have a powerful hybrid system that gives much better capacity, where the GPU-based hash table is essentially a cache for CPU-based hash table. However, this is non-trivial and requires an efficient algorithms for keeping track of the heavy hitters. Therefore, we leave it as a stretch goal, and if we have extra time after completing the project, we may discuss potential strategies for implementing this hybrid approach.</p>
+                <h5>Demo</h5>
+                <p>The demo for our project will be a comparison chart for a CPU-based hash table implemtation and our GPU-based hash table for different workloads (e.g. increasing R/W size). We hope to show that our hash table outperforms CPU-based hash tables and is scalable within the bound of GPU memory.</p>
+            </div>
+            <a href="#six" class="goto-next scrolly">Next</a>
+        </div>
+    </section>
+
+    <!-- Six -->
+    <section id="six" class="main special">
+        <div class="container">
+            <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
+            <div class="content">
+                <header class="major">
+                    <h2>Platform Choice</h2>
+                </header>
+                <p>We need a highly-performant GPU that has a reasonable amount of memory, and thus worker nodes in  <code>latedays</code> cluster is a natural choice. Especially, the nodes with Titan X are ideal, as they offer high GPU memory and bandwidth.
+                    <br />
+                    <br />
+                    As for language choice, we will most likely write the hash table in C++ and CUDA since we had similar experience in <a href="http://15418.courses.cs.cmu.edu/spring2016/article/4">Assignment Two</a> in this course; we will also use Thrust library to make our life easier with CUDA. For generating test traces, we will use Python as it allows easy list manipulation.</p>
+            </div>
+            <a href="#seven" class="goto-next scrolly">Next</a>
+        </div>
+    </section>
+
+
+    <!-- Seven -->
+    <section id="seven" class="main special">
+        <div class="container">
+            <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
+            <div class="content">
+                <header class="major">
+                    <h2>Project Checkpoint</h2>
+                </header>
+                <p> So far we have had two main areas of focus. One of the areas of focus has been Legion, in order to achieve the desired speeds from our hashtable and not have to worry about managing memory regions ourselves we followed the advice of cmu researcher and decided to use Legion as a tool to manage our regions and deal with the low-level GPU parallelism. We have spent a lot of time learning Legion and how to get the most out of Legion understanding their implementation and how to use their namespace. A lot of the power of Legion comes from the management and declerations of regions. </p>
+                <p> Our second area of focus is building a GPU hashmap. A lot of research has been done on this topic already in determining the most efficient way of hashing information on a GPU. We have already picked an algorithm based on a paper we read and are now working on porting the algorithm to Legion. </p>
+                <br />
+                <p>We actually have made a sizable change since proposing the project. One of the main things we realized early on was that if our idea was to implement a high performance hash-map then our current plan of two-phase commit and providing elasticity are orthogonal to that goal. For our strech goals its looking unlikely that we will achieve our strech goals. Legion is proving to be more complicated then we originally inteded and provides more options to speed up our project then we have time to implement. </p>
+                <p>For our new goals for the competition we will demo a Legion based GPU hashmap that focuses heavily in performance. We most likely will present our work as a set of graphs showing the speeds for our code compared to more traditional methods of hashing at different sizes of dataset and different number of nodes and hash functions.</p>
+                <p>Our current concerns are showcasing our project. In order for our project to reach the point we want it to be at we need high performance GPUs and large datasets to test it on and to profile our code on. We our currently searching for both of these and while we have found some options nothing has been ideal.</p>
+            </div>
+            <a href="#eight" class="goto-next scrolly">Next</a>
+        </div>
+    </section>
+
+    <!-- Eight -->
+    <section id="eight" class="main special">
+        <div class="container">
+            <span class="image fit primary"><img src="images/test1.jpg" alt="" /></span>
+            <div class="content">
+                <header class="major">
+                    <h2>Schedule (Updated)</h2>
+                </header>
+                <h4>Week 1 - April 8th</h4>
+                <p> Familiarity with Legion + One node system with multiple Clients + Decide Design Structure </p>
+                <h4>Week 2 - April 15th</h4>
+                <p> Achieve desired speed with one node (Optimizations) </p>
+                <h4>Week 3 April 22nd (First Half)</h4>
+                <p> Legion Code Complete (nponte) Hashing Function Research (yzong) </p>
+                <h4>Week 3 April 22nd (Second Half)</h4>
+                <p> Debugging Legion (nponte) Integrating Hashing (yzong) </p>
+                <h4>Week 4 April 29th (First Half)</h4>
+                <p> Profile code (nponte) Testing Different Hash Implementations (yzong) Midterm (yzong+nponte) </p>
+                <h4>Week 4 April 29th (Second Half)</h4>
+                <p> Testing on Large Datasets (nponte) Benchmarking with parameters (yzong) </p>
+                <h4>Week 5 May 6th (First Half)</h4>
+                <p> Optimizations (nponte+yzong) </p>
+                <h4>Week 5 May 6th (Second Half)</h4>
+                <p> Project Report (nponte+yzong) </p>
+            </div>
+        </div>
+        <footer>
+            <p> 15-418 Spring 2016 Final Project </p>
+            <ul class="copyright" style="list-style-type: none;">
+                <li>Design: <a href="http://html5up.net">HTML5 UP</a>
+                </li>
+                <li>Demo Images: <a href="http://unsplash.com">Unsplash</a>
+                </li>
+            </ul>
+        </footer>
+    </section>
+
+    <!-- Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.scrollex.min.js"></script>
+    <script src="assets/js/jquery.scrolly.min.js"></script>
+    <script src="assets/js/skel.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+    <script src="assets/js/main.js"></script>
+
+</body>
+
+</html>
