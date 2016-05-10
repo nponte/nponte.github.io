@@ -127,13 +127,45 @@
                 <header class="major">
                     <h2>Results</h2>
                     </header>
-                    <p> There are three main metrics that are used to categorize hash tables. Lookup speed, memory footprint, and construction time. Most important to us is lookup speed, this was our common case. Lookup speed is measured in throughput per input elements and this graph can be found at the top of the page with a link to the rest of our graphs. Cuckoo hashing has O(1) lookup time and it is very noticable when doing a lookup of a large amount of elements. </p>
-                    <br />
-                    <p> In order to test we created traces and ran them through construction, insertion, deletion, and lookup. If our hash function is as claimed then the input should not matter it should always hash evenly between the buckets. In the real world the user would include our library in their project and pass in as arguments the input vectors to our hash table. </p>
-                    <br />
-                    <p> There were two main factors in limiting our speedup. The first is the more obvious of the factors, we run our commands on large input arrays and therefore have to copy over the input array into device code in order to run out hashing algorithms on it. With very large input size this will make us memory bound. Not only then but we also move large chunks from device memory to host memory when returning the results to the user. The second slowdown major slowdown comes from divergence. In cuckoo hashing when the first bucket hash fails all the blocks move onto the second bucket hash. Doing testing we found out that ~70% of our elements found a spot after the first hashing and therefore diverged from the othe 30% that had not found a block. This happens again before we finally converge the blocks.
-                   <br />
-                   <p> Two other factors limiting speedup is the lack of locality when doing the thrust operations there was little locality to be found. To solve this we would of had to use sort which was more expensive then the locality issues it solved. Finally we have atomic increments and decrements to variables which slowed down the system but were essential to the correctness of the system. </p>
+                    <p> There are two main metrics that are used to measure the performance of our hash tables: operation throughput (measured in number of ops per second), and memory footprint. Most important to us is the former, since it is what the users of our library care about. In order to test the correctness of our implementation and tune parameters, we created operation traces and ran construction, insertion, deletion, and lookup on the hash table. Following are the performance charts we obtained, along with our interpretations:
+
+                    <p>Firstly, when we ran insertion and deletion on the hash table, we noticed that they have very similar performance characteristics, as shown in the chart below. As the data size increases, we observe a general increase in operation throughput because higher amount of data is able to utilize the parallelism more fully, and because the proportion of useful work increases. Also, the performance curve for insertions has more turbulence because the bucket rehashing operation happens randomly and is time-consuming.</p>
+
+                    <div>
+                    <a href="https://plot.ly/~alsdkfj/19/" target="_blank" title="Insertion / Deletion Throughput vs. Data Size" style="display: block; text-align: center;"><img src="https://plot.ly/~alsdkfj/19.png" alt="Insertion / Deletion Throughput vs. Data Size" style="max-width: 100%;width: 1258px;"  width="1258" onerror="this.onerror=null;this.src='https://plot.ly/404.png';" /></a>
+                    <script data-plotly="alsdkfj:19"  src="https://plot.ly/embed.js" async></script>
+                    </div>
+
+
+                    <p><br />Needless to say, lookup speed is also a crucial benchmark of our hash table since lookup is the most common use case in real-world scenarios. The benchmark of lookup speed can be found below. Notice that both axes are log-scaled, and our hash table scales very well up to the point where GPU memory runs out. This can be explained by the fact that cuckoo hashing has $\mathcal{O}(1)$ lookup time, whose implication to lookup performance is very noticable for large lookup requests.</p>
+                    <div>
+                    <a href="https://plot.ly/~alsdkfj/20/" target="_blank" title="Lookup Throughput vs. Data Size" style="display: block; text-align: center;"><img src="https://plot.ly/~alsdkfj/20.png" alt="Lookup Throughput vs. Data Size" style="max-width: 100%;width: 1463px;"  width="1463" onerror="this.onerror=null;this.src='https://plot.ly/404.png';" /></a>
+                    <script data-plotly="alsdkfj:20"  src="https://plot.ly/embed.js" async></script>
+                    </div>
+
+                    <p><br />An interesting parameter in our hash table is <i>bucket size (load)</i>. Having a smaller bucket size would generate extra memory overhead (36 bytes per buket), and it would also narrow down the hash value space and cause more collisions and bucket-rehashing, which are heavily time-consuming; however, it could potentially fit into GPU memory cache, thereby reducing memory latency. The goal of our empirical analysis is to determine if the cache locality is worth the extra rehashings. Following is the chart with our benchmark result, and it turns out that we are better off with larger buckets and ignore cache locality.</p>
+
+                    <div>
+                    <a href="https://plot.ly/~alsdkfj/21/" target="_blank" title="Insertion / Deletion Throughput vs. Bucket Load" style="display: block; text-align: center;"><img src="https://plot.ly/~alsdkfj/21.png" alt="Insertion / Deletion Throughput vs. Bucket Load" style="max-width: 100%;width: 1463px;"  width="1463" onerror="this.onerror=null;this.src='https://plot.ly/404.png';" /></a>
+                    <script data-plotly="alsdkfj:21"  src="https://plot.ly/embed.js" async></script>
+                    </div>
+
+                    <p><br />Another parameter that matters a lot is $\texttt{REG\_LOAD}$, which describes the load of a bucket under "normal" circumstance. This can be classified as a time-memory tradeoff, as a higher load factor saves memory but makes a more crowded hash table, and thus more cuckoo hashing iterations are required in order to find a satisfactory layout, and there would also be a higher chance for rehashing. The reverse goes for a low load-factor -- we are gaining performance wins at the cost of memory overhead. Following is the chart where we quantify the effect of load factor on insertion throughput, and it seems that 0.35 is the sweet spot for us:</p>
+
+                    <div>
+                    <a href="https://plot.ly/~alsdkfj/22/" target="_blank" title="Insertion Throughput vs. REG_LOAD" style="display: block; text-align: center;"><img src="https://plot.ly/~alsdkfj/22.png" alt="Insertion Throughput vs. REG_LOAD" style="max-width: 100%;width: 1463px;"  width="1463" onerror="this.onerror=null;this.src='https://plot.ly/404.png';" /></a>
+                    <script data-plotly="alsdkfj:22"  src="https://plot.ly/embed.js" async></script>
+                    </div>
+
+                    <p><br />Eventually, we want to see how well we perform in the real-world by comparing against other hash-table implementation. The candidate we picked is NBDS Hash Table, which is considered a highly-performant, lock-free, concurrent hash-table. When we compared our insertion performance against theirs, we noticed that we performed poorly with small data size, since small dataset does not utilize GPU's computational power effectively. However, as the size of data goes up to $2^{24}$, NBDS Hash Table runs out of memory, while our GPU implementation achieves significant performance win. This directly implies that our HH Hash is most efficient for <i>huge</i> datasets while inferior for smaller ones.
+
+                    <div>
+                    <a href="https://plot.ly/~alsdkfj/24/" target="_blank" title="Insertion Performance of HH Hash vs. NBDS Hash Table" style="display: block; text-align: center;"><img src="https://plot.ly/~alsdkfj/24.png" alt="Insertion Performance of HH Hash vs. NBDS Hash Table" style="max-width: 100%;width: 1463px;"  width="1463" onerror="this.onerror=null;this.src='https://plot.ly/404.png';" /></a>
+                    <script data-plotly="alsdkfj:24"  src="https://plot.ly/embed.js" async></script>
+                    </div>
+                    
+                    <p><br /> As we reasoned through our performance, we found two main factors that limit our speedup. The first is the more obvious: we run our commands on large input arrays and therefore have to copy over the input array into device code in order to run our hashing algorithms on it. With very large input size, we are memory-bound, as confirmed by <code>nvcc</code>. The similar issue occurs when we copy large chunks of result from device memory to host memory while returning from <code>lookup(k*, v*)</code>. The second major slowdown comes from divergence: in cuckoo hashing when the first bucket hash fails, all the blocks move onto the second bucket hash. In our testing, we found out that ~70% of our elements found a spot in the first iteration, and therefore 70% of the computational resource is wasted by waiting on the remaining 30% that had not found a block. The same happens again before we finally converge the blocks.</p>
+                   <p>Apart from the major factors above, a minor factor is that we used atomic increments and decrements to variables in different places, which could potentially slow down the system with contentions and bus traffic. However, this is necessary in order to guarantee the correctness of parallelized cuckoo hashing, and an atomic counter is the most light-weight solution possible that we found.</p>
                 </header>
           </div>
             <a href="#six" class="goto-next scrolly">Next</a>
